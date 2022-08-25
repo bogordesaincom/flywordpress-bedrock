@@ -1,0 +1,58 @@
+# fly.toml file generated for sharesalam on 2022-08-24T19:12:55+07:00
+
+app = "mywordpress"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+  DB_NAME="dbname"
+  DB_USER="dbuser"
+  DB_PASSWORD="password"
+  DB_HOST="database.internal"
+  DB_PREFIX="wp_"
+  WP_ENV="production"
+  WP_HOME="https://example.com"
+  WP_SITEURL="https://example.com/wp"
+
+  AUTH_KEY='generateme'
+  SECURE_AUTH_KEY='generateme'
+  LOGGED_IN_KEY='generateme'
+  NONCE_KEY='generateme'
+  AUTH_SALT='generateme'
+  SECURE_AUTH_SALT='generateme'
+  LOGGED_IN_SALT='generateme'
+  NONCE_SALT='generateme'
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+[mounts]
+  source="volume_storage"
+  destination="/var/www/html/web/app/uploads"
